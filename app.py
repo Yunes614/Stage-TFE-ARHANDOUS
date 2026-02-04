@@ -19,8 +19,26 @@ REFRESH_DELAY = 0.15      # secondes (≈ fluide sans clignotement)
 # =============================
 # STREAMLIT SETUP
 # =============================
+
 st.set_page_config(page_title="Banc d'essai de traction", layout="wide")
-st.title("📊 Banc d’essai de traction – Interface Streamlit")
+
+# =============================
+# EN-TÊTE PROFESSIONNEL
+# =============================
+
+st.markdown(
+    "<h1 style='text-align:center; margin-bottom:0;'> Banc d’essai de traction  </h1>",
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    "<h2 style='text-align:center; margin-top:8px; color:gray;'>"
+    "📈 Acquisition et visualisation des données "
+    "</h2>",
+    unsafe_allow_html=True
+)
+
+st.markdown("---")
 
 # =============================
 # SESSION STATE
@@ -43,7 +61,18 @@ if "figs_created" not in st.session_state:
 # =============================
 # SIDEBAR – PARAMÈTRES ÉPROUVETTE
 # =============================
-st.sidebar.title("🧪 Paramètres éprouvette 3D")
+st.sidebar.markdown("###")
+
+col_img_left, col_img_center, col_img_right = st.sidebar.columns([1, 3, 1])
+
+with col_img_center:
+    st.image(
+        "machine.jpg",
+        caption="Machine utilisée pour les essais",
+        width=140
+    )
+
+st.sidebar.title("Réglages éprouvette 3D")
 
 st.sidebar.selectbox("Type de filament", ["PLA", "ABS", "PETG", "TPU"])
 st.sidebar.selectbox("Motif de remplissage", ["Gyroïde", "Rectiligne", "Monotone"])
