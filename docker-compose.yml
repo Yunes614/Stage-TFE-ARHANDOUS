@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  mqtt:
+    container_name: mosquitto
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: emile
+      MYSQL_DATABASE: traction
+      MYSQL_USER: traction_user
+      MYSQL_PASSWORD: traction_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  nodered:
+    container_name: node-red
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    depends_on:
+      - mqtt
+      - mariadb
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_data:/data
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
+  mariadb_data:
+  nodered_data:
+  grafana_data:
